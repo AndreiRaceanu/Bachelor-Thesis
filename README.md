@@ -1,2 +1,0 @@
-# Bachelor-Thesis
-Thesis Project
