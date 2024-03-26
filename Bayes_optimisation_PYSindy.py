@@ -23,6 +23,7 @@ def err(param1, param2):
     _model, x_data = get_model_and_data(param1, param2)
     alpha = 1
     score = _model.score(x_data, metric=mean_squared_error) + alpha * _model.complexity
+    print(f'parametrii folositi in functie sunt acestea {param1,param2} \n')
     return score
 
 # variabila score modeleaza performantele aproximarii, unde _model.complexity este un numar ce reprezinta numarul
@@ -47,6 +48,7 @@ def get_model_and_data(param1, param2):
         optimizer=optimizer,
         feature_names=["x"])
     model.fit(x_data, t=TIME)
+    print(f'parametrii folositi in model sunt acestea{param1,param2}\n')
     return model, x_data
 
 
@@ -59,8 +61,7 @@ params = {'param1' : ('int',[2,100]),
           'param2' : ('int',[2,100])}
 np.random.seed(23)
 gpgo = GPGO(surogate, acq, err,params)
-
-gpgo.run(max_iter = 100)
+gpgo.run(max_iter = 20,init_evals=5)
 print(gpgo.GP.y)
 
 
@@ -144,8 +145,6 @@ plst.show()
 
 
 
-#sa fac initul sa aiba mai mult de trei initializari
 #sa verific ca param1 si param 2 se fedeaza la fiecare iteratie a optimizarii bayesiene
 # optimizarea lui sindy si BO.
-# foaia aia
 # set de date/aplicatie public data sets for ML/kagel
