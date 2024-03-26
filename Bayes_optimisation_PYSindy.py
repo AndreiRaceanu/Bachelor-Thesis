@@ -17,13 +17,16 @@ from sklearn.metrics import mean_squared_error
 
 data_sine = np.linspace(-np.pi/2, np.pi/2, num=1000)
 
+alpha = 1
 
 
 def err(param1, param2):
     _model, x_data = get_model_and_data(param1, param2)
-    alpha = 1
     score = _model.score(x_data, metric=mean_squared_error) + alpha * _model.complexity
-    print(f'parametrii folositi in functie sunt acestea {param1,param2} \n')
+    print(f'Scorul functiei IN ERR este urmatorul {score} \n')
+    #print(f'parametrii folositi in functie sunt acestea {param1,param2} \n')
+    #print(f' modelul folosit in functie este urmatorul {_model}\n')
+
     return score
 
 # variabila score modeleaza performantele aproximarii, unde _model.complexity este un numar ce reprezinta numarul
@@ -31,12 +34,10 @@ def err(param1, param2):
 
 
 TIME = np.linspace(0, 1, 1000)
-
+x = np.array(data_sine)
+x_data = x
+differentiation_method = ps.FiniteDifference(order=2)
 def get_model_and_data(param1, param2):
-
-    x = np.array(data_sine)
-    x_data = x
-    differentiation_method = ps.FiniteDifference(order=2)
     poly_lib = ps.PolynomialLibrary(degree=int(param1))
     trig_lib = ps.FourierLibrary(n_frequencies=int(param2))
     custom_lib = poly_lib + trig_lib
@@ -48,7 +49,15 @@ def get_model_and_data(param1, param2):
         optimizer=optimizer,
         feature_names=["x"])
     model.fit(x_data, t=TIME)
-    print(f'parametrii folositi in model sunt acestea{param1,param2}\n')
+    #print(f'parametrii folositi in model sunt acestea{param1,param2}\n')
+
+
+   # print(f'parametrii folositi de librariile pentru functii sunt acestea {poly_lib, trig_lib}')
+
+    #print(f' modelul folosit este urmatorul {model}\n')
+
+    print(f'scorul functiei IN MODEL  este urmatorul : {model.score(x_data, metric = mean_squared_error)  + alpha * model.complexity} ')
+
     return model, x_data
 
 
