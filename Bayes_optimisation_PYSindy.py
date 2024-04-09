@@ -10,12 +10,12 @@ from pyGPGO.covfunc import squaredExponential
 from pyGPGO.acquisition import Acquisition
 from pyGPGO.GPGO import GPGO
 from sklearn.metrics import mean_squared_error
-
+from pysindy.differentiation import SmoothedFiniteDifference
 #importarea modulelor necesare prelucrarii datelor, optimizarii bayesiene si gasirii ecuatiilor sistemului dinamic
 
 
 
-data_sine = np.linspace(-np.pi/2, np.pi/2, num=1000)
+data_sine = np.sin(np.linspace(-np.pi/2, np.pi/2, num=1000))
 
 alpha = 1
 
@@ -70,8 +70,7 @@ params = {'param1' : ('int',[2,100]),
           'param2' : ('int',[2,100])}
 np.random.seed(23)
 gpgo = GPGO(surogate, acq, err,params)
-gpgo.run(max_iter = 20,init_evals=5)
-print(gpgo.GP.y)
+gpgo.run(max_iter = 100,init_evals=20)
 
 
 
@@ -105,8 +104,8 @@ def get_x_dot_and_x_dot_predicted(_model, x, t=None, x_dot=None, u=None, multipl
     return x_dot, x_dot_predict
 
 
-params_list = gpgo.GP.X[3:]
-current_eval_list = gpgo.GP.y[3:]
+params_list = gpgo.GP.X[21:]
+current_eval_list = gpgo.GP.y[21:]
 
 t_list = list(range(1, len(params_list) + 1))
 param1_list = [point[0] for point in params_list]
@@ -139,8 +138,12 @@ print(f'\nbest_params, best_eval={best_params, best_eval}')
 model, x_data = get_model_and_data(best_params[0], best_params[1])
 model.print() # prints (x)'
 
-x_derivative_real = model.differentiate(x_data)
+   #x_derivative_real = model.differentiate(x_data)
 _, x_derivative_estimated = get_x_dot_and_x_dot_predicted(model, x_data) # NOTE that _ = x_derivative_real
+
+
+sfd = SmoothedFiniteDifference()
+x_derivative_real = sfd._differentiate(x_data,TIME)
 
 derivative_subplot = plst.figure().add_subplot()
 derivative_subplot.plot(TIME, x_derivative_real, label ="x_derivative_real")
@@ -150,10 +153,4 @@ derivative_subplot.legend()
 plst.show()
 
 
-
-
-
-
-#sa verific ca param1 si param 2 se fedeaza la fiecare iteratie a optimizarii bayesiene
-# optimizarea lui sindy si BO.
 # set de date/aplicatie public data sets for ML/kagel
