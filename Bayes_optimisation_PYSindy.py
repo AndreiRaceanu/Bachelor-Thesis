@@ -16,14 +16,17 @@ from pysindy.differentiation import SmoothedFiniteDifference
 
 
 data_sine = np.sin(np.linspace(-np.pi/2, np.pi/2, num=1000))
-
 alpha = 1
-
-
+TIME = np.linspace(0, 1, 1000)
+x = np.array(data_sine)
+x_data = x
+differentiation_method = ps.FiniteDifference(order=2)
+sfd1 = SmoothedFiniteDifference()
+x_precalculat = sfd1._differentiate(x_data,TIME)
 def err(param1, param2):
     _model, x_data = get_model_and_data(param1, param2)
-    score = _model.score(x_data, metric=mean_squared_error) + alpha * _model.complexity
-    print(f'Scorul functiei IN ERR este urmatorul {score} \n')
+    score = _model.score(x_data, TIME,x_dot = x_precalculat, metric=mean_squared_error) + alpha * _model.complexity
+    #print(f'Scorul functiei IN ERR este urmatorul {score} \n')
     #print(f'parametrii folositi in functie sunt acestea {param1,param2} \n')
     #print(f' modelul folosit in functie este urmatorul {_model}\n')
 
@@ -33,10 +36,7 @@ def err(param1, param2):
 # de parametri non-zero
 
 
-TIME = np.linspace(0, 1, 1000)
-x = np.array(data_sine)
-x_data = x
-differentiation_method = ps.FiniteDifference(order=2)
+
 def get_model_and_data(param1, param2):
     poly_lib = ps.PolynomialLibrary(degree=int(param1))
     trig_lib = ps.FourierLibrary(n_frequencies=int(param2))
@@ -56,7 +56,7 @@ def get_model_and_data(param1, param2):
 
     #print(f' modelul folosit este urmatorul {model}\n')
 
-    print(f'scorul functiei IN MODEL  este urmatorul : {model.score(x_data, metric = mean_squared_error)  + alpha * model.complexity} ')
+   # print(f'scorul functiei IN MODEL  este urmatorul : {model.score(x_data, metric = mean_squared_error)  + alpha * model.complexity} ')
 
     return model, x_data
 
@@ -112,14 +112,14 @@ param1_list = [point[0] for point in params_list]
 param2_list = [point[1] for point in params_list]
 
 
-print(f't_list={t_list}')
-print('\n')
-print(f'point_param1_list={param1_list}')
-print('\n')
-print(f'point_param2_list={param2_list}')
-print('\n')
-print(f'current_eval={current_eval_list}')
-print('\n')
+#print(f't_list={t_list}')
+#print('\n')
+#print(f'point_param1_list={param1_list}')
+#print('\n')
+#print(f'point_param2_list={param2_list}')
+#print('\n')
+#print(f'current_eval={current_eval_list}')
+#print('\n')
 
 
 def plot_subplot(x, y, label):
@@ -127,9 +127,18 @@ def plot_subplot(x, y, label):
     subplot.plot(x, y, label = label)
     subplot.legend()
 
+sorted_indices = current_eval_list.argsort()
+sorted_indices_descending = (-1*current_eval_list).argsort()
+ 
+current_eval_list_2= current_eval_list[sorted_indices_descending]
+
+
+
+
+
 plot_subplot(t_list, param1_list, "param1")
 plot_subplot(t_list, param2_list, "param2")
-plot_subplot(t_list, current_eval_list, "current_eval")
+plot_subplot(t_list, current_eval_list_2, "current_eval")
 
 best_eval = min(current_eval_list)
 best_params = params_list[np.where(current_eval_list == best_eval)][0]
