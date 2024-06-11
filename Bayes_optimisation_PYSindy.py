@@ -15,7 +15,19 @@ from pysindy.differentiation import SmoothedFiniteDifference
 
 
 
-data_sine = np.sin(np.linspace(-np.pi/2, np.pi/2, num=1000))
+def read_file (file_path) :
+    with open(file_path, 'r') as file : 
+        content = file.read()
+    return content
+
+file_paths
+# data_sine = np.sin(np.linspace(-np.pi/2, np.pi/2, num=1000))
+
+data_0 
+data_1 
+data_2
+data_3 
+
 alpha = 1
 TIME = np.linspace(0, 1, 1000)
 x = np.array(data_sine)
@@ -49,6 +61,9 @@ def get_model_and_data(param1, param2):
         optimizer=optimizer,
         feature_names=["x"])
     model.fit(x_data, t=TIME)
+
+
+    
     #print(f'parametrii folositi in model sunt acestea{param1,param2}\n')
 
 
