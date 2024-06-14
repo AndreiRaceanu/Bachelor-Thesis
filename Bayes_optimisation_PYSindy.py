@@ -15,26 +15,11 @@ from pysindy.differentiation import SmoothedFiniteDifference
 
 
 
-def read_file (file_path) :
-    with open(file_path, 'r') as file : 
-        content = file.read()
-    return content
 
-file_paths
-# data_sine = np.sin(np.linspace(-np.pi/2, np.pi/2, num=1000))
-
-data_0 
-data_1 
-data_2
-data_3 
 
 alpha = 1
-TIME = np.linspace(0, 1, 1000)
-x = np.array(data_sine)
-x_data = x
-differentiation_method = ps.FiniteDifference(order=2)
-sfd1 = SmoothedFiniteDifference()
-x_precalculat = sfd1._differentiate(x_data,TIME)
+
+
 def err(param1, param2):
     _model, x_data = get_model_and_data(param1, param2)
     score = _model.score(x_data, TIME,x_dot = x_precalculat, metric=mean_squared_error) + alpha * _model.complexity
@@ -44,15 +29,11 @@ def err(param1, param2):
 
     return score
 
-# variabila score modeleaza performantele aproximarii, unde _model.complexity este un numar ce reprezinta numarul
-# de parametri non-zero
 
 
 
 def get_model_and_data(param1, param2):
-    poly_lib = ps.PolynomialLibrary(degree=int(param1))
-    trig_lib = ps.FourierLibrary(n_frequencies=int(param2))
-    custom_lib = poly_lib + trig_lib
+
     feature_library = custom_lib
     optimizer = ps.STLSQ(threshold=0.2)
     model = ps.SINDy(
