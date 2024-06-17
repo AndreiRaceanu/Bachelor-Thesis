@@ -36,6 +36,7 @@ def get_model_and_data(param1, param2):
 
     feature_library = custom_lib
     optimizer = ps.STLSQ(threshold=0.2)
+    optimizer = ps.STLSQ(threshold=0.2)
     model = ps.SINDy(
         differentiation_method=differentiation_method,
         feature_library=custom_lib,

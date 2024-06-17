@@ -10,6 +10,7 @@ from pyGPGO.acquisition import Acquisition
 from pyGPGO.surrogates.GaussianProcess import GaussianProcess
 from pyGPGO.GPGO import GPGO
 import matplotlib.pyplot as plt
+from pysindy.differentiation import FiniteDifference
 
 
 
@@ -43,12 +44,30 @@ X_data_set = np.array(X)
 
 variav  = 1
 
-rows = 10
+rows= 10
 columns = 16384
-data = np.arange(rows * columns)
-time = data.reshape((rows, columns))
+
 sfd1 = SmoothedFiniteDifference()
-X_data_set_derivative = [sfd1._differentiate(X_data_set[i], time) for i in range(rows)]
+
+matrix = []
+time = range(0,16384)
+time = list(time)
+for it in range(10):
+    matrix.append(time)
+matrix2 = []
+matrix2.append(matrix)
+matrix2.append(matrix)
+t = np.linspace(0,10,1)
+x = np.sin(t)
+sfd = SmoothedFiniteDifference(smoother_kws={'window_length': 5})
+print(x)
+print(t)
+"""
+for it in range(10):
+    x_derivative.append(sfd1._differentiate(X_data_set[0][it],time))
+for it in range(10):
+    x_derivative.append(sfd1._differentiate(X_data_set[1][it],time))
+"""
 
 
 
@@ -68,8 +87,8 @@ def setup_model(threshold, alpha, polynomial_degree, trig_degree):
         feature_library= custom_lib,
         feature_names = ["CHF5", "CHFC1", "CHP5", "CHCP1", "CHP4", "CHPO8", "CHFP2", "CHFC6", "CHFZ", "CHPZ"],
      )
-    model_3.fit(X_data_set, t = time, multiple_trajectories = True)
-    error = model_3.score(X_data_set, t = time, x_dot=X_data_set_derivative,multiple_trajectories = True, metric = mean_squared_error) + variav * model_3.complexity()
+    model_3.fit(X_data_set, t= matrix2, multiple_trajectories=True)
+    error = model_3.score(X_data_set,t = matrix2,multiple_trajectories = True, metric = mean_squared_error) + variav * model_3.complexity()
     return error
 
 # Bayesian optimizer
